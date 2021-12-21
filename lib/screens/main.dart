@@ -7,7 +7,7 @@ class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const DefaultTabController(
-      length: 2,
+      length: 1,
       child: Scaffold(
         appBar: TabBar(
           tabs: [
@@ -16,17 +16,17 @@ class Main extends StatelessWidget {
               Icons.devices_rounded,
               color: Colors.black,
             )),
-            Tab(
-                icon: Icon(
-              Icons.library_books,
-              color: Colors.black,
-            )),
+            // Tab(
+            //     icon: Icon(
+            //   Icons.library_books,
+            //   color: Colors.black,
+            // )),
           ],
         ),
         body: TabBarView(
           children: [
             DeviceScreen(),
-            Icon(Icons.library_books),
+            // Icon(Icons.library_books),
           ],
         ),
       ),
