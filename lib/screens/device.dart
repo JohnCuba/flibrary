@@ -1,3 +1,4 @@
+import 'package:flibrary/models/device.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,24 +15,9 @@ class DeviceScreen extends ConsumerStatefulWidget {
 }
 
 class _DeviceScreenState extends ConsumerState<DeviceScreen> {
-  late List<FileSystemEntity> _books;
-
   @override
   void initState() {
-    _books = [];
     super.initState();
-    ref.read(deviceProvider);
-  }
-
-  _pickDirectory() async {
-    final deviceState = ref.read(deviceProvider);
-    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
-    deviceState.updateSourcePath(selectedDirectory ?? '');
-    Directory directory = Directory(selectedDirectory ?? '');
-
-    setState(() {
-      _books = directory.listSync(recursive: false);
-    });
   }
 
   @override
@@ -45,13 +31,13 @@ class _DeviceScreenState extends ConsumerState<DeviceScreen> {
             icon: Icon(deviceState.sourcePath.isNotEmpty
                 ? Icons.devices_outlined
                 : Icons.device_unknown_outlined),
-            onPressed: _pickDirectory,
+            onPressed: deviceState.updateSourcePath,
           ),
           title: Text(deviceState.sourcePath.isNotEmpty
               ? deviceState.sourcePath
               : 'Выбери папку с книгами на устройстве'),
         ),
-        ..._books.map((e) => BookPreview(title: e.path)).toList()
+        ...deviceState.books.map((e) => BookPreview(title: e)).toList()
       ],
     );
   }
