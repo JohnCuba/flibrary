@@ -1,27 +1,14 @@
-import 'package:flibrary/models/device.dart';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:io';
 
 import '../components/bookPreview.dart';
 import 'package:flibrary/providers/device.dart';
 
-class DeviceScreen extends ConsumerStatefulWidget {
+class DeviceScreen extends ConsumerWidget {
   const DeviceScreen({Key? key}) : super(key: key);
 
   @override
-  _DeviceScreenState createState() => _DeviceScreenState();
-}
-
-class _DeviceScreenState extends ConsumerState<DeviceScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final deviceState = ref.watch(deviceProvider);
 
     return Column(

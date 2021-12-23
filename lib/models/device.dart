@@ -13,8 +13,9 @@ class DeviceModel extends ChangeNotifier {
   }
 
   getBooksList() {
+    //TODO: Android unsopported files don't listen in directory
     books = Directory(sourcePath)
-        .listSync(recursive: false)
+        .listSync(recursive: true)
         .map((e) => e.toString())
         .toList();
   }
