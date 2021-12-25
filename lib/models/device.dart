@@ -8,13 +8,13 @@ class DeviceModel extends ChangeNotifier {
 
   updateSourcePath() async {
     sourcePath = await FilePicker.platform.getDirectoryPath() ?? '';
-    getFilesList();
+    await getFilesList();
     notifyListeners();
   }
 
-  getFilesList() {
+  getFilesList() async {
     //TODO: Android unsupported files, and don't listen them in directory
-    files =
-        Directory(sourcePath).listSync(recursive: true).map((e) => e).toList();
+    //TODO: Filter unsupported by app files
+    files = await Directory(sourcePath).list(recursive: true).toList();
   }
 }
