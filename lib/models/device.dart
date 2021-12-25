@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 
+// TODO: Watch for files changes
 class DeviceModel extends ChangeNotifier {
   String sourcePath = '';
   late List<FileSystemEntity> files = [];

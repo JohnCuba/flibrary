@@ -11,6 +11,7 @@ class BookPreview extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final book = ref.watch(bookProvider(file));
+
     return Card(
       elevation: 2,
       child: Column(
