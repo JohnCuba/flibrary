@@ -9,6 +9,7 @@ class Main extends StatelessWidget {
     return const DefaultTabController(
       length: 1,
       child: Scaffold(
+        extendBodyBehindAppBar: false,
         appBar: TabBar(
           tabs: [
             Tab(

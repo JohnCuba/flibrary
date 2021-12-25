@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../components/gallery.dart';
 import '../components/bookPreview.dart';
 import 'package:flibrary/providers/device.dart';
 
@@ -24,7 +25,12 @@ class DeviceScreen extends ConsumerWidget {
               ? deviceState.sourcePath
               : 'Выбери папку с книгами на устройстве'),
         ),
-        ...deviceState.books.map((e) => BookPreview(title: e)).toList()
+        Expanded(
+          child: Gallery(
+            children:
+                deviceState.files.map((e) => BookPreview(file: e)).toList(),
+          ),
+        )
       ],
     );
   }
