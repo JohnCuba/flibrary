@@ -1,53 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'dart:io';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../components/gallery.dart';
 import '../components/bookPreview.dart';
+import 'package:flibrary/providers/device.dart';
 
-class DeviceScreen extends StatefulWidget {
+class DeviceScreen extends ConsumerWidget {
   const DeviceScreen({Key? key}) : super(key: key);
 
   @override
-  State<DeviceScreen> createState() => _DeviceScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final deviceState = ref.watch(deviceProvider);
 
-class _DeviceScreenState extends State<DeviceScreen> {
-  late String _directoryPath;
-  late List<FileSystemEntity> _books;
-
-  @override
-  void initState() {
-    _directoryPath = '';
-    _books = [];
-    super.initState();
-  }
-
-  _pickDirectory() async {
-    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
-    Directory directory = Directory(selectedDirectory ?? '');
-
-    setState(() {
-      _directoryPath = selectedDirectory ?? '';
-      _books = directory.listSync(recursive: false);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Column(
       children: [
         AppBar(
           leading: IconButton(
-            icon: Icon(_directoryPath.isNotEmpty
+            icon: Icon(deviceState.sourcePath.isNotEmpty
                 ? Icons.devices_outlined
                 : Icons.device_unknown_outlined),
-            onPressed: _pickDirectory,
+            onPressed: deviceState.updateSourcePath,
           ),
-          title: Text(_directoryPath.isNotEmpty
-              ? _directoryPath
+          title: Text(deviceState.sourcePath.isNotEmpty
+              ? deviceState.sourcePath
               : 'Выбери папку с книгами на устройстве'),
         ),
-        ..._books.map((e) => BookPreview(title: e.path)).toList()
+        Expanded(
+          child: Gallery(
+            children:
+                deviceState.files.map((e) => BookPreview(file: e)).toList(),
+          ),
+        )
       ],
     );
   }
