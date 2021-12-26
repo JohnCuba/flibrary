@@ -19,7 +19,7 @@ class DeviceScreen extends ConsumerWidget {
             icon: Icon(deviceState.sourcePath.isNotEmpty
                 ? Icons.devices_outlined
                 : Icons.device_unknown_outlined),
-            onPressed: deviceState.updateSourcePath,
+            onPressed: deviceState.chooseSourcePath,
           ),
           title: Text(deviceState.sourcePath.isNotEmpty
               ? deviceState.sourcePath
