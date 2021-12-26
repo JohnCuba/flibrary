@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flibrary/const/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
@@ -38,8 +39,11 @@ class DeviceModel extends ChangeNotifier {
 
   getFilesList() async {
     //TODO: Android unsupported files, and don't listen them in directory
-    //TODO: Filter unsupported by app files
-    files = await Directory(sourcePath).list(recursive: true).toList();
+    files = await Directory(sourcePath)
+        .list(recursive: false)
+        .where((event) =>
+            supportedFileTypes.any((type) => event.path.endsWith(type)))
+        .toList();
     notifyListeners();
   }
 }
