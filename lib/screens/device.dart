@@ -16,13 +16,13 @@ class DeviceScreen extends ConsumerWidget {
       children: [
         AppBar(
           leading: IconButton(
-            icon: Icon(deviceState.sourcePath.isNotEmpty
+            icon: Icon(deviceState.dirSetted
                 ? Icons.devices_outlined
                 : Icons.device_unknown_outlined),
             onPressed: deviceState.chooseSourcePath,
           ),
-          title: Text(deviceState.sourcePath.isNotEmpty
-              ? deviceState.sourcePath
+          title: Text(deviceState.dirSetted
+              ? deviceState.dir!.path
               : 'Выбери папку с книгами на устройстве'),
         ),
         Expanded(

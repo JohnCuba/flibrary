@@ -6,9 +6,9 @@ import 'package:file_picker/file_picker.dart';
 
 // TODO: Watch for files changes
 class DeviceModel extends ChangeNotifier {
-  String sourcePath = '';
   late SharedPreferences storage;
-  List<FileSystemEntity> files = [];
+  Directory? dir;
+  List<String> files = [];
 
   DeviceModel() {
     _initStorage();
@@ -17,19 +17,26 @@ class DeviceModel extends ChangeNotifier {
   _initStorage() async {
     storage = await SharedPreferences.getInstance();
     await _updateSourcePath();
+
+    runFilesWatcher();
   }
 
   _updateSourcePath([String? path]) async {
     if (path != null) {
       await storage.setString('deviceSourcePath', path);
-      sourcePath = path;
+      dir = Directory(path);
     } else {
-      sourcePath = storage.getString('deviceSourcePath') ?? '';
+      final savedPath = storage.getString('deviceSourcePath');
+      dir = savedPath != null ? Directory(savedPath) : null;
     }
 
-    if (sourcePath.isNotEmpty) {
+    if (dirSetted) {
       await getFilesList();
     }
+  }
+
+  get dirSetted {
+    return dir != null;
   }
 
   chooseSourcePath() async {
@@ -39,11 +46,23 @@ class DeviceModel extends ChangeNotifier {
 
   getFilesList() async {
     //TODO: Android unsupported files, and don't listen them in directory
-    files = await Directory(sourcePath)
+    files = await dir!
         .list(recursive: false)
         .where((event) =>
             supportedFileTypes.any((type) => event.path.endsWith(type)))
+        .map((event) => event.path)
         .toList();
     notifyListeners();
+  }
+
+  runFilesWatcher() {
+    dir!.watch(events: FileSystemEvent.all).listen((event) {
+      if (event is FileSystemDeleteEvent) {
+        files.removeWhere((file) => file == event.path);
+      } else if (event is FileSystemMoveEvent) {
+        files.add(event.destination ?? '');
+      }
+      notifyListeners();
+    });
   }
 }

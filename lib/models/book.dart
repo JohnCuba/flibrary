@@ -5,8 +5,8 @@ import 'package:epubx/epubx.dart';
 import 'package:flutter/material.dart';
 
 class BookModel extends ChangeNotifier {
-  BookModel(FileSystemEntity file) {
-    _file = File(file.path);
+  BookModel(String file) {
+    _file = File(file);
     _parseFile();
   }
 
