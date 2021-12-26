@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
 
-// TODO: Watch for files changes
 class DeviceModel extends ChangeNotifier {
   late SharedPreferences storage;
   Directory? dir;
@@ -18,7 +17,7 @@ class DeviceModel extends ChangeNotifier {
     storage = await SharedPreferences.getInstance();
     await _updateSourcePath();
 
-    runFilesWatcher();
+    _runFilesWatcher();
   }
 
   _updateSourcePath([String? path]) async {
@@ -47,7 +46,7 @@ class DeviceModel extends ChangeNotifier {
   getFilesList() async {
     //TODO: Android unsupported files, and don't listen them in directory
     files = await dir!
-        .list(recursive: false)
+        .list()
         .where((event) =>
             supportedFileTypes.any((type) => event.path.endsWith(type)))
         .map((event) => event.path)
@@ -55,8 +54,13 @@ class DeviceModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  runFilesWatcher() {
-    dir!.watch(events: FileSystemEvent.all).listen((event) {
+  _runFilesWatcher() {
+    dir!
+        .watch()
+        .where((event) => supportedFileTypes.any((type) =>
+            event.path.endsWith(type) ||
+            event is FileSystemMoveEvent && event.destination!.endsWith(type)))
+        .listen((event) {
       if (event is FileSystemDeleteEvent) {
         files.removeWhere((file) => file == event.path);
       } else if (event is FileSystemMoveEvent) {
