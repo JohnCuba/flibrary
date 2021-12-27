@@ -21,7 +21,7 @@ class BookModel extends ChangeNotifier {
   }
 
   void deleteBook() async {
-    await _file.delete();
+    _file.delete();
   }
 
   String? get title {
