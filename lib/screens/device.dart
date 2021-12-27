@@ -12,26 +12,11 @@ class DeviceScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final deviceState = ref.watch(deviceProvider);
 
-    return Column(
-      children: [
-        AppBar(
-          leading: IconButton(
-            icon: Icon(deviceState.dirSetted
-                ? Icons.devices_outlined
-                : Icons.device_unknown_outlined),
-            onPressed: deviceState.chooseSourcePath,
-          ),
-          title: Text(deviceState.dirSetted
-              ? deviceState.dir!.path
-              : 'Выбери папку с книгами на устройстве'),
-        ),
-        Expanded(
-          child: Gallery(
-            children:
-                deviceState.files.map((e) => BookPreview(file: e)).toList(),
-          ),
-        )
-      ],
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: Gallery(
+        children: deviceState.files.map((e) => BookPreview(file: e)).toList(),
+      ),
     );
   }
 }
