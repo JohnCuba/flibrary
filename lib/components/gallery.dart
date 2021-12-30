@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
+// TODO: rewrite on List view
 class Gallery extends StatelessWidget {
   const Gallery({Key? key, required this.children}) : super(key: key);
   final List<Widget> children;
