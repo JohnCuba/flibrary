@@ -15,11 +15,11 @@ class BookPreview extends ConsumerWidget {
       elevation: 2,
       child: Column(
         children: [
-          Expanded(
-            child: book.cover != null
-                ? Image.memory(book.cover!)
-                : const Icon(Icons.book),
-          ),
+          // Expanded(
+          //   child: book.cover != null
+          //       ? Image.memory(book.cover!)
+          //       : const Icon(Icons.book),
+          // ),
           Row(
             children: [
               Expanded(
