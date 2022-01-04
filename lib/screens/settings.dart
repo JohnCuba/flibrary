@@ -1,34 +1,25 @@
-import 'package:flibrary/providers/device.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SettingsScreen extends ConsumerWidget {
+import 'package:flibrary/components/configDevice.dart';
+import 'package:flibrary/components/configLibrary.dart';
+
+class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
   @override
-  build(BuildContext context, WidgetRef ref) {
-    final deviceState = ref.watch(deviceProvider);
-
-    return Center(
-      child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          // TODO: Mark that directory is not choosen
-          Row(
-            children: [
-              IconButton(
-                splashRadius: 16,
-                icon: Icon(deviceState.dirSetted
-                    ? Icons.devices_outlined
-                    : Icons.device_unknown_outlined),
-                onPressed: deviceState.chooseSourcePath,
-              ),
-              Text(deviceState.dirSetted
-                  ? deviceState.dir!.path
-                  : 'Выбери папку с книгами на устройстве'),
-            ],
-          )
-        ],
+  build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topCenter,
+      child: SizedBox(
+        width: min(MediaQuery.of(context).size.width, 1024),
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            const ConfigDevice(),
+            ConfigLibrary(),
+          ],
+        ),
       ),
     );
   }

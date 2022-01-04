@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
 
 class DeviceModel extends ChangeNotifier {
-  late SharedPreferences storage;
+  late SharedPreferences _storage;
   Directory? dir;
   List<String> files = [];
 
@@ -14,7 +14,7 @@ class DeviceModel extends ChangeNotifier {
   }
 
   _initStorage() async {
-    storage = await SharedPreferences.getInstance();
+    _storage = await SharedPreferences.getInstance();
     await _updateSourcePath();
 
     _runFilesWatcher();
@@ -22,10 +22,10 @@ class DeviceModel extends ChangeNotifier {
 
   _updateSourcePath([String? path]) async {
     if (path != null) {
-      await storage.setString('deviceSourcePath', path);
+      await _storage.setString('deviceSourcePath', path);
       dir = Directory(path);
     } else {
-      final savedPath = storage.getString('deviceSourcePath');
+      final savedPath = _storage.getString('deviceSourcePath');
       dir = savedPath != null ? Directory(savedPath) : null;
     }
 
