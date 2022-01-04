@@ -17,7 +17,7 @@ class BookModel extends ChangeNotifier {
   _parseFile() async {
     _book = await EpubReader.openBook(_file.readAsBytes());
     notifyListeners();
-    _parseCover();
+    // _parseCover();
   }
 
   _parseCover() async {

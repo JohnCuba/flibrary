@@ -13,35 +13,14 @@ class BookPreview extends ConsumerWidget {
 
     return Card(
       elevation: 2,
-      child: Column(
-        children: [
-          Expanded(
-            child: book.cover != null
-                ? Image.memory(book.cover!)
-                : const Icon(Icons.book),
-          ),
-          Row(
-            children: [
-              Expanded(
-                  flex: 6,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(book.title ?? ''),
-                      Text(book.author ?? ''),
-                    ],
-                  )),
-              Flexible(
-                  flex: 1,
-                  child: IconButton(
+      child: ListTile(
+        title: Text(book.title ?? ''),
+        subtitle: Text(book.author ?? ''),
+        trailing: IconButton(
                     splashRadius: 15,
                     icon: const Icon(Icons.delete),
                     onPressed: book.deleteBook,
-                  ))
-            ],
-          )
-        ],
-      ),
+                  )),
     );
   }
 }
