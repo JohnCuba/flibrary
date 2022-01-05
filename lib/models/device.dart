@@ -55,7 +55,7 @@ class DeviceModel extends ChangeNotifier {
   }
 
   _runFilesWatcher() {
-    dir!
+    dirSetted ?? dir!
         .watch()
         .where((event) => supportedFileTypes.any((type) =>
             event.path.endsWith(type) ||

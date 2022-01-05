@@ -31,7 +31,7 @@ class LibraryModel extends ChangeNotifier {
   }
 
   set body(String newBody) {
-    _body = jsonDecode(newBody);
+    _body = jsonDecode(newBody.isNotEmpty ? newBody : '{}');
     _updateStore('libraryBody', body);
   }
 
