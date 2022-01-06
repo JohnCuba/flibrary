@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart';
 import 'package:epubx/epubx.dart';
 import 'package:flutter/material.dart';
@@ -44,3 +45,6 @@ class BookModel extends ChangeNotifier {
     return _book != null ? _cover : null;
   }
 }
+
+final bookProvider = ChangeNotifierProvider.autoDispose
+    .family<BookModel, String>((ref, file) => BookModel(file));

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:flibrary/providers/book.dart';
+import 'package:flibrary/stores/book.dart';
 
 class BookPreview extends ConsumerWidget {
   const BookPreview({Key? key, required this.file}) : super(key: key);

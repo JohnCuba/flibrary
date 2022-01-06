@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:flibrary/services/opds.dart';
 
 class LibraryModel extends ChangeNotifier {
   late SharedPreferences _storage;
   String _uri = '';
-  Map<String, dynamic> _body = {};
+  final Map<String, String> _headers = {};
 
   LibraryModel() {
     _initStorage();
@@ -21,18 +24,22 @@ class LibraryModel extends ChangeNotifier {
       await _storage.setString(key, value);
     } else {
       uri = _storage.getString('libraryUri') ?? '';
-      body = _storage.getString('libraryBody') ?? '';
+      body = _storage.getString('libraryHeaders') ?? '';
     }
+    Opds(_uri, _headers);
     notifyListeners();
   }
 
   String get body {
-    return jsonEncode(_body);
+    return jsonEncode(_headers);
   }
 
   set body(String newBody) {
-    _body = jsonDecode(newBody.isNotEmpty ? newBody : '{}');
-    _updateStore('libraryBody', body);
+    Map<String, dynamic> rawMap = json.decode(newBody.isNotEmpty ? newBody : '{}');
+    rawMap.forEach((key, value) {
+      _headers[key] = value.toString();
+    });
+    _updateStore('libraryHeaders', body);
   }
 
   String get uri {
@@ -44,3 +51,5 @@ class LibraryModel extends ChangeNotifier {
     _updateStore('libraryUri', uri);
   }
 }
+
+final libraryProvider = ChangeNotifierProvider((ref) => LibraryModel());

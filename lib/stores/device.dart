@@ -3,6 +3,7 @@ import 'package:flibrary/const/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DeviceModel extends ChangeNotifier {
   late SharedPreferences _storage;
@@ -70,3 +71,5 @@ class DeviceModel extends ChangeNotifier {
     });
   }
 }
+
+final deviceProvider = ChangeNotifierProvider((ref) => DeviceModel());

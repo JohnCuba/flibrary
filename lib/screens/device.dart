@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../components/bookPreview.dart';
 import 'package:flibrary/components/configDevice.dart';
-import 'package:flibrary/providers/device.dart';
+import 'package:flibrary/stores/device.dart';
 
 class DeviceScreen extends ConsumerWidget {
   const DeviceScreen({Key? key}) : super(key: key);

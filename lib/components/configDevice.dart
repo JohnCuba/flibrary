@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:flibrary/providers/device.dart';
+import 'package:flibrary/stores/device.dart';
 
 class ConfigDevice extends ConsumerWidget {
   const ConfigDevice({Key? key}) : super(key: key);
