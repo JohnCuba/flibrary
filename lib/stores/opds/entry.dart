@@ -35,22 +35,30 @@ class EntryModel extends ChangeNotifier {
     }
   }
 
-  void getCover() async {
+  void getCover() {
     switch (kind) {
       case OpdsEntryKind.book:
-        await fetchFromLibrary(
-          _element
-            .findAllElements('link')
-            .firstWhere((element) => element.getAttribute('type') == 'image/jpeg')
-            .getAttribute('href')
-        )
-          .then((value) {
-            cover = Image.memory(value.bodyBytes).image;
-            notifyListeners();
-          });
+        _loadCover();
         break;
       case OpdsEntryKind.other:
         return null;
+    }
+  }
+
+  void _loadCover() async {
+    try {
+      await fetchFromLibrary(
+        _element
+          .findAllElements('link')
+          .firstWhere((element) => element.getAttribute('type') == 'image/jpeg')
+          .getAttribute('href')
+      )
+        .then((value) {
+          cover = Image.memory(value.bodyBytes).image;
+          notifyListeners();
+        });
+    } catch (error) {
+      return null;
     }
   }
 
