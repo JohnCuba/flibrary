@@ -41,12 +41,12 @@ class ConfigLibrary extends ConsumerWidget {
               child: TextField(
                 controller: _bodyController,
                 decoration: InputDecoration(
-                  labelText: libraryState.body.isNotEmpty 
-                    ? libraryState.body
+                  labelText: libraryState.headers.isNotEmpty 
+                    ? libraryState.headers
                     : 'Введи тело запроса в формате json',
                   suffixIcon: IconButton(
                     onPressed: () {
-                      libraryState.body = _bodyController.text;
+                      libraryState.headers = _bodyController.text;
                       _bodyController.clear();
                     },
                     icon: const Icon(Icons.save)

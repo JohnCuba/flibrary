@@ -20,17 +20,17 @@ class Main extends StatelessWidget {
                 Tab(
                     child: Icon(
                   Icons.devices_rounded,
-                  color: Colors.black,
+                  color: Colors.white,
                 )),
                 Tab(
                     icon: Icon(
                   Icons.library_books,
-                  color: Colors.black,
+                  color: Colors.white,
                 )),
                 Tab(
                     icon: Icon(
                   Icons.settings,
-                  color: Colors.black,
+                  color: Colors.white,
                 )),
               ],
             ),

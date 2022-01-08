@@ -1,3 +1,4 @@
+import 'package:flibrary/components/opds/opds.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,8 +11,6 @@ class LibraryScreen extends ConsumerWidget {
   build(BuildContext context, WidgetRef ref) {
     final libraryState = ref.watch(libraryProvider);
 
-    return ListView(
-      children: const [Text('screen is in development')],
-    );
+    return Opds();
   }
 }
