@@ -41,7 +41,7 @@ class EntryModel extends ChangeNotifier {
   String get subtitle {
     switch (kind) {
       case OpdsEntryKind.book:
-        return _element.getElement('author')!.getElement('name')!.text;
+        return _element.getElement('author')?.getElement('name')?.text ?? 'Автор не указан';
       case OpdsEntryKind.other:
         return _element.getElement('content')?.text ?? '';
     }
