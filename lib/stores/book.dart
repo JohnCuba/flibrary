@@ -46,5 +46,6 @@ class BookModel extends ChangeNotifier {
   }
 }
 
-final bookProvider = ChangeNotifierProvider.autoDispose
+final bookProvider = ChangeNotifierProvider
+    .autoDispose
     .family<BookModel, String>((ref, file) => BookModel(file));

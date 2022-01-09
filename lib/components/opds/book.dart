@@ -7,11 +7,13 @@ class Book extends StatelessWidget {
     this.author,
     this.cover,
     required this.onDownload,
+    required this.loadingPercent,
   }) : super(key: key);
   final String title;
   final String? author;
   final ImageProvider<Object>? cover;
   final void Function() onDownload;
+  final double loadingPercent;
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +22,15 @@ class Book extends StatelessWidget {
         leading: cover != null ? Image(image: cover!) : null,
         title: Text(title),
         subtitle: author != null ? Text(author!) : null,
-        trailing: IconButton(
-          onPressed: onDownload,
-          icon: const Icon(Icons.download)
-        ),
+        trailing: loadingPercent == 0
+        ? IconButton(
+            onPressed: onDownload,
+            icon: const Icon(Icons.download)
+          )
+        : CircularProgressIndicator(
+            value: loadingPercent,
+            backgroundColor: Colors.white,
+          )
       ),
     );
   }

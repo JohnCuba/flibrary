@@ -50,9 +50,14 @@ class LibraryModel extends ChangeNotifier {
     _updateStore('libraryUri', newUri);
   }
 
-  Future<http.Response> fetchFromLibrary([String? path]) async {
-    return await _client
-      .get(path != null ? _uri.resolve('.$path') : _uri, headers: _headers);
+  Future<http.StreamedResponse> fetchFromLibrary([String? path]) async {
+    http.Request request = http.Request('GET', path != null ? _uri.resolve('.$path') : _uri);
+    if (_headers.isNotEmpty) {
+      _headers.forEach((key, value) {
+        request.headers[key] = value;
+      });
+    }
+    return await _client.send(request);
   }
 }
 

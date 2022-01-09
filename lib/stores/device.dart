@@ -18,7 +18,7 @@ class DeviceModel extends ChangeNotifier {
     _storage = await SharedPreferences.getInstance();
     await _updateSourcePath();
 
-    _runFilesWatcher();
+    _filesStreaming();
   }
 
   _updateSourcePath([String? path]) async {
@@ -55,20 +55,18 @@ class DeviceModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  _runFilesWatcher() {
-    dirSetted ?? dir!
-        .watch()
-        .where((event) => supportedFileTypes.any((type) =>
-            event.path.endsWith(type) ||
-            event is FileSystemMoveEvent && event.destination!.endsWith(type)))
-        .listen((event) {
-      if (event is FileSystemDeleteEvent) {
-        files.removeWhere((file) => file == event.path);
-      } else if (event is FileSystemMoveEvent) {
-        files.add(event.destination ?? '');
-      }
-      notifyListeners();
-    });
+  _filesStreaming() {
+    dir!
+      .watch()
+      .where((event) => supportedFileTypes.any((type) => event.path.endsWith(type)))
+      .listen((event) {
+        if (event is FileSystemDeleteEvent) {
+          files.removeWhere((file) => file == event.path);
+        } else if (event is FileSystemModifyEvent && event.contentChanged) {
+          files.add(event.path);
+        }
+        notifyListeners();
+      });
   }
 }
 
