@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flibrary/stores/library.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,35 +10,38 @@ class OpdsModel extends ChangeNotifier {
     _loadMainPage();
   }
 
-  final Future<http.Response> Function([String? path]) fetchFromLibrary;
+  final Future<http.StreamedResponse> Function([String? path]) fetchFromLibrary;
   late List<XmlElement> entries = [];
   List<String> history = [];
   late String pathTitle = '';
+  double loadingPercent = 0;
+  final List<int> _bytes = [];
 
   void _loadMainPage() async {
-    await fetchFromLibrary()
-      .then((value) {
-        XmlDocument document = XmlDocument.parse(value.body);
-        _updatePage(document);
-      });
+    await fetchFromLibrary().then(_parsePage);
   }
 
   void goToPath(String path) async {
     history.add(path);
-    return await fetchFromLibrary(path)
-      .then((value) {
-        XmlDocument document = XmlDocument.parse(value.body);
-        _updatePage(document);
-      });
+    return await fetchFromLibrary(path).then(_parsePage);
   }
 
   void goPrevPath() async {
     history.removeLast();
-    return await fetchFromLibrary(history.isNotEmpty ? history.last : null)
-      .then((value) {
-        XmlDocument document = XmlDocument.parse(value.body);
-        _updatePage(document);
-      });
+    return await fetchFromLibrary(history.isNotEmpty ? history.last : null).then(_parsePage);
+  }
+
+  _parsePage(http.StreamedResponse value) {
+    value.stream.listen((bytes) {
+      loadingPercent = _bytes.length / value.contentLength!;
+      notifyListeners();
+      _bytes.addAll(bytes);
+    }).onDone(() {
+      XmlDocument document = XmlDocument.parse(const Utf8Decoder().convert(_bytes));
+      _bytes.clear();
+      loadingPercent = 0;
+      _updatePage(document);
+    });
   }
 
   void _updatePage(XmlDocument document) {

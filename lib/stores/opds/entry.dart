@@ -8,11 +8,14 @@ import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart';
 
 class EntryModel extends ChangeNotifier {
-  final Future<http.Response> Function([String? path]) fetchFromLibrary;
+  final Future<http.StreamedResponse> Function([String? path]) fetchFromLibrary;
   final String pathForFiles;
   late final XmlElement _element;
   late ImageProvider<Object>? cover;
   late String _format;
+  double loadingPercent = 0;
+  final List<int> _bytes = [];
+  // TODO: add enum states of download
 
   EntryModel(
     this._element,
@@ -66,8 +69,10 @@ class EntryModel extends ChangeNotifier {
           .getAttribute('href')
       )
         .then((value) {
-          cover = Image.memory(value.bodyBytes).image;
-          notifyListeners();
+          value.stream.toBytes().then((bytes) {
+            cover = Image.memory(bytes).image;
+            notifyListeners();
+          });
         });
     } catch (error) {
       return null;
@@ -106,14 +111,24 @@ class EntryModel extends ChangeNotifier {
 
   void downloadBook() async {
     try {
-      await fetchFromLibrary(_getDownloadLink())
-        .then((response) {
-          File('$pathForFiles/$title.$_format')
-            .writeAsBytesSync(response.bodyBytes);
-        });
+      await fetchFromLibrary(_getDownloadLink()).then(_parseFile);
     } catch (error) {
       return null;
     }
+  }
+
+  _parseFile(http.StreamedResponse value) {
+    loadingPercent = 0.1;
+    notifyListeners();
+    value.stream.listen((bytes) {
+      loadingPercent = _bytes.length / value.contentLength!;
+      notifyListeners();
+      _bytes.addAll(bytes);
+    }).onDone(() {
+      File('$pathForFiles/$title.$_format').writeAsBytesSync(_bytes);
+      _bytes.clear();
+      loadingPercent = 0;
+    });
   }
 
   String? get path {
