@@ -10,7 +10,8 @@ class OpdsModel extends ChangeNotifier {
     _loadMainPage();
   }
 
-  final Future<http.StreamedResponse> Function([String? path]) fetchFromLibrary;
+  final Future<http.StreamedResponse?> Function([String? path])
+      fetchFromLibrary;
   late List<XmlElement> entries = [];
   List<String> history = [];
   late String pathTitle = '';
@@ -28,20 +29,24 @@ class OpdsModel extends ChangeNotifier {
 
   void goPrevPath() async {
     history.removeLast();
-    return await fetchFromLibrary(history.isNotEmpty ? history.last : null).then(_parsePage);
+    return await fetchFromLibrary(history.isNotEmpty ? history.last : null)
+        .then(_parsePage);
   }
 
-  _parsePage(http.StreamedResponse value) {
-    value.stream.listen((bytes) {
-      loadingPercent = _bytes.length / value.contentLength!;
-      notifyListeners();
-      _bytes.addAll(bytes);
-    }).onDone(() {
-      XmlDocument document = XmlDocument.parse(const Utf8Decoder().convert(_bytes));
-      _bytes.clear();
-      loadingPercent = 0;
-      _updatePage(document);
-    });
+  _parsePage(http.StreamedResponse? value) {
+    if (value != null) {
+      value.stream.listen((bytes) {
+        loadingPercent = _bytes.length / value.contentLength!;
+        notifyListeners();
+        _bytes.addAll(bytes);
+      }).onDone(() {
+        XmlDocument document =
+            XmlDocument.parse(const Utf8Decoder().convert(_bytes));
+        _bytes.clear();
+        loadingPercent = 0;
+        _updatePage(document);
+      });
+    }
   }
 
   void _updatePage(XmlDocument document) {
@@ -51,6 +56,7 @@ class OpdsModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+
 // TODO: A OpdsModel was used after being disposed.
-final opdsProvider = ChangeNotifierProvider
-  ((ref) => OpdsModel(fetchFromLibrary: ref.watch(libraryProvider).fetchFromLibrary));
+final opdsProvider = ChangeNotifierProvider((ref) =>
+    OpdsModel(fetchFromLibrary: ref.watch(libraryProvider).fetchFromLibrary));

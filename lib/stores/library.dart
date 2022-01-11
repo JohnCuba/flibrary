@@ -5,59 +5,53 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 class LibraryModel extends ChangeNotifier {
-  late SharedPreferences _storage;
-  Uri _uri = Uri.parse('http://opds.oreilly.com/opds/');
-  final Map<String, String> _headers = {};
+  late SharedPreferences? _storage;
   final http.Client _client = http.Client();
 
   LibraryModel() {
+    _storage = null;
     _initStorage();
   }
 
   _initStorage() async {
     _storage = await SharedPreferences.getInstance();
-    _updateStore();
+    notifyListeners();
   }
 
-  _updateStore([String? key, String? value]) {
-    if (key != null && value != null) {
-      _storage.setString(key, value);
-    } else {
-      uri = _storage.getString('libraryUri') ?? '';
-      headers = _storage.getString('libraryHeaders') ?? '';
-    }
+  _updateStore(String key, String value) {
+    _storage?.setString(key, value);
     notifyListeners();
   }
 
   String get headers {
-    return jsonEncode(_headers);
+    return _storage?.getString('libraryHeaders') ?? '';
   }
 
   set headers(String value) {
-    Map<String, dynamic> rawMap = json.decode(value.isNotEmpty ? value : '{}');
-    rawMap.forEach((key, value) {
-      _headers[key] = value.toString();
-    });
-    _updateStore('libraryHeaders', headers);
+    _updateStore('libraryHeaders', value);
   }
 
   String get uri {
-    return _uri.toString();
+    return _storage?.getString('libraryUri') ?? '';
   }
 
   set uri(String newUri) {
-    _uri = Uri.parse(newUri).normalizePath();
     _updateStore('libraryUri', newUri);
   }
 
-  Future<http.StreamedResponse> fetchFromLibrary([String? path]) async {
-    http.Request request = http.Request('GET', path != null ? _uri.resolve('.$path') : _uri);
-    if (_headers.isNotEmpty) {
-      _headers.forEach((key, value) {
-        request.headers[key] = value;
-      });
+  Future<http.StreamedResponse?> fetchFromLibrary([String? path]) async {
+    Uri? parsedUri = uri.isNotEmpty ? Uri.parse(uri) : null;
+    if (parsedUri != null) {
+      http.Request request = http.Request(
+          'GET', path != null ? parsedUri.resolve('.$path') : parsedUri);
+      if (headers.isNotEmpty) {
+        json.decode(headers).forEach((key, value) {
+          request.headers[key] = value;
+        });
+      }
+      return await _client.send(request);
     }
-    return await _client.send(request);
+    return null;
   }
 }
 
