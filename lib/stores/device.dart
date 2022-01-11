@@ -57,16 +57,20 @@ class DeviceModel extends ChangeNotifier {
 
   _filesStreaming() {
     dir!
-      .watch()
-      .where((event) => supportedFileTypes.any((type) => event.path.endsWith(type)))
-      .listen((event) {
-        if (event is FileSystemDeleteEvent) {
-          files.removeWhere((file) => file == event.path);
-        } else if (event is FileSystemModifyEvent && event.contentChanged) {
-          files.add(event.path);
-        }
-        notifyListeners();
-      });
+        .watch()
+        .where((event) =>
+            supportedFileTypes.any((type) => event.path.endsWith(type)))
+        .listen((event) {
+      if (event is FileSystemDeleteEvent) {
+        files.removeWhere((file) => file == event.path);
+      } else if (event is FileSystemModifyEvent &&
+          event.contentChanged &&
+          files.last != event.path) {
+        // TODO: On linux FileSystemModifyEvent fire two times
+        files.add(event.path);
+      }
+      notifyListeners();
+    });
   }
 }
 
