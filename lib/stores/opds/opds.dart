@@ -10,8 +10,7 @@ class OpdsModel extends ChangeNotifier {
     _loadMainPage();
   }
 
-  final Future<http.StreamedResponse?> Function([String? path])
-      fetchFromLibrary;
+  final Future<http.StreamedResponse?> Function([String? path]) fetchFromLibrary;
   late List<XmlElement> entries = [];
   List<String> history = [];
   late String pathTitle = '';
@@ -40,8 +39,7 @@ class OpdsModel extends ChangeNotifier {
         notifyListeners();
         _bytes.addAll(bytes);
       }).onDone(() {
-        XmlDocument document =
-            XmlDocument.parse(const Utf8Decoder().convert(_bytes));
+        XmlDocument document = XmlDocument.parse(const Utf8Decoder().convert(_bytes));
         _bytes.clear();
         loadingPercent = 0;
         _updatePage(document);

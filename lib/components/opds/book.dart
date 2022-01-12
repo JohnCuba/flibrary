@@ -1,3 +1,5 @@
+import 'package:flibrary/components/loadButton.dart';
+import 'package:flibrary/const/enum.dart';
 import 'package:flutter/material.dart';
 
 class Book extends StatelessWidget {
@@ -6,11 +8,13 @@ class Book extends StatelessWidget {
     required this.title,
     this.author,
     this.cover,
+    required this.loadState,
     required this.onDownload,
     required this.loadingPercent,
   }) : super(key: key);
   final String title;
   final String? author;
+  final LoadState loadState;
   final ImageProvider<Object>? cover;
   final void Function() onDownload;
   final double loadingPercent;
@@ -22,15 +26,11 @@ class Book extends StatelessWidget {
         leading: cover != null ? Image(image: cover!) : null,
         title: Text(title),
         subtitle: author != null ? Text(author!) : null,
-        trailing: loadingPercent == 0
-        ? IconButton(
-            onPressed: onDownload,
-            icon: const Icon(Icons.download)
-          )
-        : CircularProgressIndicator(
-            value: loadingPercent,
-            backgroundColor: Colors.white,
-          )
+        trailing: LoadButton(
+          state: loadState,
+          onClick: onDownload,
+          loadingPercent: loadingPercent
+        )
       ),
     );
   }

@@ -8,15 +8,14 @@ import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart';
 
 class EntryModel extends ChangeNotifier {
-  final Future<http.StreamedResponse?> Function([String? path])
-      fetchFromLibrary;
+  final Future<http.StreamedResponse?> Function([String? path]) fetchFromLibrary;
   final String pathForFiles;
   late final XmlElement _element;
   late ImageProvider<Object>? cover;
   late String _format;
   double loadingPercent = 0;
   final List<int> _bytes = [];
-  // TODO: add enum states of download
+  LoadState loadState = LoadState.notStarted;
 
   EntryModel(
     this._element, {
@@ -116,6 +115,8 @@ class EntryModel extends ChangeNotifier {
 
   void downloadBook() async {
     try {
+      loadState = LoadState.pending;
+      notifyListeners();
       await fetchFromLibrary(_getDownloadLink()).then(_parseFile);
     } catch (error) {
       return null;
@@ -123,6 +124,7 @@ class EntryModel extends ChangeNotifier {
   }
 
   _parseFile(http.StreamedResponse? value) {
+    loadState = LoadState.load;
     loadingPercent = 0.1;
     notifyListeners();
     if (value != null) {
@@ -132,6 +134,7 @@ class EntryModel extends ChangeNotifier {
         _bytes.addAll(bytes);
       }).onDone(() {
         File('$pathForFiles/$title.$_format').writeAsBytesSync(_bytes);
+        loadState = LoadState.done;
         _bytes.clear();
         loadingPercent = 0;
       });

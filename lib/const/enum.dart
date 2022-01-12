@@ -4,3 +4,10 @@ enum OpdsEntryKind {
   book,
   other,
 }
+
+enum LoadState {
+  notStarted,
+  pending,
+  load,
+  done,
+}
