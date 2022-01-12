@@ -26,7 +26,12 @@ class Opds extends ConsumerWidget {
                     onPressed: opdsState.goPrevPath,
                     icon: const Icon(Icons.arrow_back),
                   ),
-                  Text(opdsState.pathTitle)
+                  Expanded(child: Text(opdsState.pathTitle)),
+                  IconButton(
+                    splashRadius: 16,
+                    onPressed: opdsState.goNextPage,
+                    icon: const Icon(Icons.arrow_forward),
+                  ),
                 ],
               ),
               Expanded(

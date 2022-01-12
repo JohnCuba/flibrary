@@ -14,6 +14,7 @@ class OpdsModel extends ChangeNotifier {
   late List<XmlElement> entries = [];
   List<String> history = [];
   late String pathTitle = '';
+  late String? nextPageLink;
   double loadingPercent = 0;
   final List<int> _bytes = [];
 
@@ -32,6 +33,10 @@ class OpdsModel extends ChangeNotifier {
         .then(_parsePage);
   }
 
+  void goNextPage() async {
+    return await fetchFromLibrary(nextPageLink).then(_parsePage);
+  }
+
   _parsePage(http.StreamedResponse? value) {
     if (value != null) {
       value.stream.listen((bytes) {
@@ -47,9 +52,23 @@ class OpdsModel extends ChangeNotifier {
     }
   }
 
-  void _updatePage(XmlDocument document) {
-    pathTitle = document.findAllElements('title').first.text;
+  void _clearPage() {
     entries.clear();
+    nextPageLink = null;
+  }
+
+  void _updatePage(XmlDocument document) {
+    _clearPage();
+
+    pathTitle = document.findAllElements('title').first.text;
+
+    for (var element in document.findAllElements('link')) {
+      var rel = element.getAttribute('rel');
+      if (rel == 'next') {
+        nextPageLink = element.getAttribute('href');
+      }
+    }
+
     entries = document.findAllElements('entry').toList();
     notifyListeners();
   }
