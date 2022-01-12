@@ -62,17 +62,11 @@ class EntryModel extends ChangeNotifier {
 
   void _loadCover() async {
     try {
-      await fetchFromLibrary(_element
-              .findAllElements('link')
-              .firstWhere(
-                  (element) => element.getAttribute('type') == 'image/jpeg')
-              .getAttribute('href'))
-          .then((value) {
-        value ??
-            value!.stream.toBytes().then((bytes) {
-              cover = Image.memory(bytes).image;
-              notifyListeners();
-            });
+      await fetchFromLibrary(_getCoverLink()).then((value) {
+        value!.stream.toBytes().then((bytes) {
+          cover = Image.memory(bytes).image;
+          notifyListeners();
+        });
       });
     } catch (error) {
       return null;
@@ -94,6 +88,18 @@ class EntryModel extends ChangeNotifier {
       }).isNotEmpty;
     } catch (error) {
       return false;
+    }
+  }
+
+  String? _getCoverLink() {
+    try {
+      return _element
+              .findAllElements('link')
+              .firstWhere(
+                  (element) => element.getAttribute('type') == 'image/jpeg')
+              .getAttribute('href');
+    } catch (error) {
+      return null;
     }
   }
 
