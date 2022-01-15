@@ -44,12 +44,14 @@ class DeviceModel extends ChangeNotifier {
     await _updateSourcePath(path);
   }
 
+  bool _checkEventFileExtension(dynamic event) => 
+    supportedFileTypes.any((type) => event.path.endsWith(type));
+
   getFilesList() async {
     //TODO: Android unsupported files, and don't listen them in directory
     files = await dir!
         .list()
-        .where((event) =>
-            supportedFileTypes.any((type) => event.path.endsWith(type)))
+        .where(_checkEventFileExtension)
         .map((event) => event.path)
         .toList();
     notifyListeners();
@@ -58,8 +60,7 @@ class DeviceModel extends ChangeNotifier {
   _filesStreaming() {
     dir!
         .watch()
-        .where((event) =>
-            supportedFileTypes.any((type) => event.path.endsWith(type)))
+        .where(_checkEventFileExtension)
         .listen((event) {
       if (event is FileSystemDeleteEvent) {
         files.removeWhere((file) => file == event.path);
