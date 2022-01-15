@@ -1,48 +1,30 @@
-import 'dart:io';
-import 'dart:typed_data';
+import 'package:flibrary/lib/localBook.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image/image.dart';
-import 'package:epubx/epubx.dart';
 import 'package:flutter/material.dart';
 
 class BookModel extends ChangeNotifier {
   BookModel(String file) {
-    _file = File(file);
+    _book = LocalBook(file);
     _parseFile();
   }
 
-  late File _file;
-  EpubBookRef? _book;
-  late Uint8List? _cover;
+  late LocalBook _book;
 
   _parseFile() async {
-    _book = await EpubReader.openBook(_file.readAsBytes());
+    await _book.parseFile();
     notifyListeners();
-    // _parseCover();
-  }
-
-  _parseCover() async {
-    if (_book != null) {
-      var _stream = await _book!.readCover();
-      _cover = Uint8List.fromList(encodePng(_stream!));
-      notifyListeners();
-    }
   }
 
   void deleteBook() async {
-    _file.delete();
+    _book.deleteFile();
   }
 
-  String? get title {
-    return _book != null ? _book!.Title : '';
+  String get title {
+    return _book.title;
   }
 
-  String? get author {
-    return _book != null ? _book!.Author : '';
-  }
-
-  Uint8List? get cover {
-    return _book != null ? _cover : null;
+  String get author {
+    return _book.author;
   }
 }
 

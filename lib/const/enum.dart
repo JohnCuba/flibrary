@@ -1,5 +1,9 @@
 const List<String> supportedFileTypes = ['epub'];
 
+enum SupportedExtensions {
+  epub,
+}
+
 enum OpdsEntryKind {
   book,
   other,
