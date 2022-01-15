@@ -14,8 +14,8 @@ class BookPreview extends ConsumerWidget {
     return Card(
       elevation: 2,
       child: ListTile(
-        title: Text(book.title ?? ''),
-        subtitle: Text(book.author ?? ''),
+        title: Text(book.title),
+        subtitle: Text(book.author),
         trailing: IconButton(
                     splashRadius: 15,
                     icon: const Icon(Icons.delete),

@@ -45,7 +45,7 @@ class DeviceModel extends ChangeNotifier {
   }
 
   bool _checkEventFileExtension(dynamic event) => 
-    supportedFileTypes.any((type) => event.path.endsWith(type));
+    SupportedExtensions.values.any((type) => event.path.endsWith(type.toString().replaceFirst('SupportedExtensions.', '')));
 
   getFilesList() async {
     //TODO: Android unsupported files, and don't listen them in directory

@@ -12,10 +12,10 @@ class EntryModel extends ChangeNotifier {
   final String pathForFiles;
   late final XmlElement _element;
   late ImageProvider<Object>? cover;
-  late String _format;
   double loadingPercent = 0;
-  final List<int> _bytes = [];
   LoadState loadState = LoadState.notStarted;
+  final Map<SupportedExtensions, String?> _downloadLinks = {};
+  late String _format;
 
   EntryModel(
     this._element, {
@@ -23,7 +23,24 @@ class EntryModel extends ChangeNotifier {
     required this.pathForFiles,
   }) {
     cover = null;
+    _getDownloadLinks();
     getCover();
+  }
+
+  _getDownloadLinks() {
+    try {
+      for (var type in SupportedExtensions.values) {
+        _downloadLinks[type] = _element
+          .findAllElements('link')
+          .firstWhere((element) {
+            String? elementType = element.getAttribute('type');
+            String linkType = 'application/${type.toString().replaceFirst('SupportedExtensions.', '')}';
+            return elementType == linkType || elementType == '$linkType+zip';
+          }).getAttribute('href');
+      }
+    } catch (error) {
+      return null;
+    }
   }
 
   String get title {
@@ -72,24 +89,6 @@ class EntryModel extends ChangeNotifier {
     }
   }
 
-  bool _getLinkByFormat(XmlElement element) {
-    // TODO: I think it can be better
-    try {
-      return supportedFileTypes.firstWhere((type) {
-        String? elementType = element.getAttribute('type');
-        String linkType = 'application/$type';
-        bool isRightFormat =
-            elementType == linkType || elementType == '$linkType+zip';
-        if (isRightFormat) {
-          _format = type;
-        }
-        return isRightFormat;
-      }).isNotEmpty;
-    } catch (error) {
-      return false;
-    }
-  }
-
   String? _getCoverLink() {
     try {
       return _element
@@ -102,22 +101,12 @@ class EntryModel extends ChangeNotifier {
     }
   }
 
-  String? _getDownloadLink() {
-    try {
-      return _element
-          .findAllElements('link')
-          .firstWhere(_getLinkByFormat)
-          .getAttribute('href');
-    } catch (error) {
-      return null;
-    }
-  }
-
-  void downloadBook() async {
+  void downloadBestFormatBook() async {
     try {
       loadState = LoadState.pending;
       notifyListeners();
-      await fetchFromLibrary(_getDownloadLink()).then(_parseFile);
+      _format = _downloadLinks.keys.first.toString().replaceFirst('SupportedExtensions.', '');
+      await fetchFromLibrary(_downloadLinks.values.first).then(_parseFile);
     } catch (error) {
       return null;
     }
@@ -126,6 +115,7 @@ class EntryModel extends ChangeNotifier {
   _parseFile(http.StreamedResponse? value) {
     loadState = LoadState.load;
     loadingPercent = 0.1;
+    List<int> _bytes = [];
     notifyListeners();
     if (value != null) {
       value.stream.listen((bytes) {
@@ -135,7 +125,6 @@ class EntryModel extends ChangeNotifier {
       }).onDone(() {
         File('$pathForFiles/$title.$_format').writeAsBytesSync(_bytes);
         loadState = LoadState.done;
-        _bytes.clear();
         loadingPercent = 0;
       });
     }

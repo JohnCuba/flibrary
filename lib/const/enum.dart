@@ -1,7 +1,6 @@
-const List<String> supportedFileTypes = ['epub'];
-
 enum SupportedExtensions {
   epub,
+  fb2,
 }
 
 enum OpdsEntryKind {

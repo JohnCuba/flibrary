@@ -23,7 +23,7 @@ class Entry extends ConsumerWidget {
             author: entryState.subtitle,
             cover: entryState.cover,
             loadState: entryState.loadState,
-            onDownload: entryState.downloadBook,
+            onDownload: entryState.downloadBestFormatBook,
             loadingPercent: entryState.loadingPercent,
           ),
         );

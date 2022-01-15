@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:epubx/epubx.dart';
+import 'package:fb2_parse/fb2_parse.dart';
 import 'package:path/path.dart' as p;
 import 'package:flibrary/const/enum.dart';
 
@@ -19,6 +20,10 @@ class LocalBook {
     switch (extension) {
       case SupportedExtensions.epub:
         await _parseEpub();
+        break;
+      case SupportedExtensions.fb2:
+        _parseFb2();
+        break;
     }
   }
 
@@ -30,5 +35,12 @@ class LocalBook {
     var book = await EpubReader.openBook(File(_localPath).readAsBytes());
     title = book.Title ?? '';
     author = book.Author ?? '';
+  }
+
+  _parseFb2() async {
+    var book = FB2Book(_localPath);
+    await book.parse();
+    title = book.description.bookTitle ?? '';
+    author = book.description.authors?.join(', ') ?? '';
   }
 }
