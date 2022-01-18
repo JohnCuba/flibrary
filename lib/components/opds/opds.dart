@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flibrary/components/opds/searchBox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flibrary/stores/opds/opds.dart';
@@ -34,6 +35,7 @@ class Opds extends ConsumerWidget {
                   ),
                 ],
               ),
+              SearchBox(onSubmit: opdsState.search),
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.only(top: 6) ,

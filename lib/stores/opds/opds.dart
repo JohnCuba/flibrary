@@ -15,6 +15,7 @@ class OpdsModel extends ChangeNotifier {
   List<String> history = [];
   late String pathTitle = '';
   late String? nextPageLink;
+  late String? searchLink;
   double loadingPercent = 0;
   final List<int> _bytes = [];
 
@@ -37,6 +38,11 @@ class OpdsModel extends ChangeNotifier {
     return await fetchFromLibrary(nextPageLink).then(_parsePage);
   }
 
+  void search(String value) async {
+    // TODO: Replace it with regExp
+    return await fetchFromLibrary(searchLink?.replaceFirst('{searchTerms}', '{$value}')).then(_parsePage);
+  }
+
   _parsePage(http.StreamedResponse? value) {
     if (value != null) {
       value.stream.listen((bytes) {
@@ -55,6 +61,7 @@ class OpdsModel extends ChangeNotifier {
   void _clearPage() {
     entries.clear();
     nextPageLink = null;
+    searchLink = null;
   }
 
   void _updatePage(XmlDocument document) {
@@ -66,6 +73,8 @@ class OpdsModel extends ChangeNotifier {
       var rel = element.getAttribute('rel');
       if (rel == 'next') {
         nextPageLink = element.getAttribute('href');
+      } else if (rel == 'search') {
+        searchLink = element.getAttribute('href');
       }
     }
 
