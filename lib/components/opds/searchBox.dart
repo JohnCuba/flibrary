@@ -7,10 +7,16 @@ class SearchBox extends StatelessWidget {
   @override
   build(BuildContext context) {
     return Card(
-      child: TextField(
-        textInputAction: TextInputAction.search,
-        onSubmitted: onSubmit,
-      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: TextField(
+          decoration: const InputDecoration(
+            labelText: 'Введите название книги или имя автора'
+          ),
+          textInputAction: TextInputAction.search,
+          onSubmitted: onSubmit,
+        ),
+      )
     );
   }
 }

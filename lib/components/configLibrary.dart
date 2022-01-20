@@ -11,6 +11,8 @@ class ConfigLibrary extends ConsumerWidget {
   @override
   build(BuildContext context, WidgetRef ref) {
     final libraryState = ref.watch(libraryProvider);
+    _uriController.text = libraryState.uri;
+    _bodyController.text = libraryState.headers;
 
     return Column(
       children: [
@@ -20,13 +22,10 @@ class ConfigLibrary extends ConsumerWidget {
               child: TextField(
                 controller: _uriController,
                 decoration: InputDecoration(
-                  labelText: libraryState.uri.isNotEmpty 
-                    ? libraryState.uri
-                    : 'Введите адресс каталога',
+                  labelText: 'Введите адресс каталога',
                   suffixIcon: IconButton(
                     onPressed: () {
                       libraryState.uri = _uriController.text;
-                      _uriController.clear();
                     },
                     icon: const Icon(Icons.save)
                   )
@@ -41,13 +40,10 @@ class ConfigLibrary extends ConsumerWidget {
               child: TextField(
                 controller: _bodyController,
                 decoration: InputDecoration(
-                  labelText: libraryState.headers.isNotEmpty 
-                    ? libraryState.headers
-                    : 'Введи тело запроса в формате json',
+                  labelText: 'Введи тело запроса в формате json',
                   suffixIcon: IconButton(
                     onPressed: () {
                       libraryState.headers = _bodyController.text;
-                      _bodyController.clear();
                     },
                     icon: const Icon(Icons.save)
                   )
