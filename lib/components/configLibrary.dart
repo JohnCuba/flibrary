@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:flibrary/stores/library.dart';
+import 'package:flibrary/stores/settings.dart';
 
 class ConfigLibrary extends ConsumerWidget {
   ConfigLibrary({Key? key}) : super(key: key);
@@ -10,46 +9,40 @@ class ConfigLibrary extends ConsumerWidget {
 
   @override
   build(BuildContext context, WidgetRef ref) {
-    final libraryState = ref.watch(libraryProvider);
-    _uriController.text = libraryState.uri;
-    _bodyController.text = libraryState.headers;
+    final settingsState = ref.watch(settingsProvider);
+    _uriController.text = settingsState.uri;
+    _bodyController.text = settingsState.headers;
 
     return Column(
       children: [
         Row(
           children: [
             Flexible(
-              child: TextField(
-                controller: _uriController,
-                decoration: InputDecoration(
+                child: TextField(
+              controller: _uriController,
+              decoration: InputDecoration(
                   labelText: 'Введите адресс каталога',
                   suffixIcon: IconButton(
-                    onPressed: () {
-                      libraryState.uri = _uriController.text;
-                    },
-                    icon: const Icon(Icons.save)
-                  )
-                ),
-              )
-            ),
+                      onPressed: () {
+                        settingsState.uri = _uriController.text;
+                      },
+                      icon: const Icon(Icons.save))),
+            )),
           ],
         ),
         Row(
           children: [
             Flexible(
-              child: TextField(
-                controller: _bodyController,
-                decoration: InputDecoration(
+                child: TextField(
+              controller: _bodyController,
+              decoration: InputDecoration(
                   labelText: 'Введи тело запроса в формате json',
                   suffixIcon: IconButton(
-                    onPressed: () {
-                      libraryState.headers = _bodyController.text;
-                    },
-                    icon: const Icon(Icons.save)
-                  )
-                ),
-              )
-            ),
+                      onPressed: () {
+                        settingsState.headers = _bodyController.text;
+                      },
+                      icon: const Icon(Icons.save))),
+            )),
           ],
         ),
       ],

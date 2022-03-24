@@ -1,21 +1,20 @@
 import 'dart:io';
 import 'package:flibrary/const/enum.dart';
+import 'package:flibrary/stores/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DeviceModel extends ChangeNotifier {
-  late SharedPreferences _storage;
+  String sourcePath;
   Directory? dir;
   List<String> files = [];
 
-  DeviceModel() {
+  DeviceModel({required this.sourcePath}) {
     _initStorage();
   }
 
   _initStorage() async {
-    _storage = await SharedPreferences.getInstance();
     await _updateSourcePath();
 
     _filesStreaming();
@@ -23,11 +22,10 @@ class DeviceModel extends ChangeNotifier {
 
   _updateSourcePath([String? path]) async {
     if (path != null) {
-      await _storage.setString('deviceSourcePath', path);
+      sourcePath = path;
       dir = Directory(path);
     } else {
-      final savedPath = _storage.getString('deviceSourcePath');
-      dir = savedPath != null ? Directory(savedPath) : null;
+      dir = sourcePath.isNotEmpty ? Directory(sourcePath) : null;
     }
 
     if (dirSetted) {
@@ -44,8 +42,9 @@ class DeviceModel extends ChangeNotifier {
     await _updateSourcePath(path);
   }
 
-  bool _checkEventFileExtension(dynamic event) => 
-    SupportedExtensions.values.any((type) => event.path.endsWith(type.toString().replaceFirst('SupportedExtensions.', '')));
+  bool _checkEventFileExtension(dynamic event) =>
+      SupportedExtensions.values.any((type) => event.path
+          .endsWith(type.toString().replaceFirst('SupportedExtensions.', '')));
 
   getFilesList() async {
     //TODO: Android unsupported files, and don't listen them in directory
@@ -58,10 +57,7 @@ class DeviceModel extends ChangeNotifier {
   }
 
   _filesStreaming() {
-    dir!
-        .watch()
-        .where(_checkEventFileExtension)
-        .listen((event) {
+    dir!.watch().where(_checkEventFileExtension).listen((event) {
       if (event is FileSystemDeleteEvent) {
         files.removeWhere((file) => file == event.path);
       } else if (event is FileSystemModifyEvent &&
@@ -75,4 +71,5 @@ class DeviceModel extends ChangeNotifier {
   }
 }
 
-final deviceProvider = ChangeNotifierProvider((ref) => DeviceModel());
+final deviceProvider = ChangeNotifierProvider(
+    (ref) => DeviceModel(sourcePath: ref.watch(settingsProvider).sourcePath));
