@@ -1,0 +1,50 @@
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/terms/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:opds="http://opds-spec.org/2010/catalog">
+<id>id:main</id>
+<title>Асмодей OPDS Сервер №1</title>
+<subtitle>Simple OPDS Catalog by www.sopds.ru. Version 0.23</subtitle>
+<updated>2022-06-04T22:09:51Z</updated>
+<icon>http://sopds.ru/favicon.ico</icon>
+<author>
+<name>Dmitry Shelepnev</name>
+<uri>http://asmodei.org/opds</uri>
+<email>admin@asmodei.ru</email>
+</author>
+<link type="application/atom+xml" rel="start" href="/opds/py/sopds.cgi?id=00"/>
+<link href="/opds/py/sopds.cgi?id=09" rel="search" type="application/opensearchdescription+xml"/>
+<link href="/opds/py/sopds.cgi?searchTerm={searchTerms}" rel="search" type="application/atom+xml"/>
+<entry>
+<title>По каталогам</title>
+<content type="text">Каталогов: 168, книг: 528640.</content>
+<link type="application/atom+xml;profile=opds-catalog" href="/opds/py/sopds.cgi?id=01"/>
+<id>id:01</id>
+</entry>
+<entry>
+<title>По авторам</title>
+<content type="text">Авторов: 139172.</content>
+<link type="application/atom+xml;profile=opds-catalog" href="/opds/py/sopds.cgi?id=3002"/>
+<id>id:02</id>
+</entry>
+<entry>
+<title>По наименованию</title>
+<content type="text">Книг: 528640.</content>
+<link type="application/atom+xml;profile=opds-catalog" href="/opds/py/sopds.cgi?id=3003"/>
+<id>id:03</id>
+</entry>
+<entry>
+<title>По Жанрам</title>
+<content type="text">Жанров: 940.</content>
+<link type="application/atom+xml;profile=opds-catalog" href="/opds/py/sopds.cgi?id=04"/>
+<id>id:04</id>
+</entry>
+<entry>
+<title>По Сериям</title>
+<content type="text">Серий: 41007.</content>
+<link type="application/atom+xml;profile=opds-catalog" href="/opds/py/sopds.cgi?id=3006"/>
+<id>id:06</id>
+</entry>
+<entry>
+<title>Новинки за 7 суток</title>
+<link type="application/atom+xml;profile=opds-catalog" href="/opds/py/sopds.cgi?id=05"/>
+<id>id:05</id>
+</entry>
+</feed>

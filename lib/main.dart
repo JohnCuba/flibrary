@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import './screens/main.dart';
+import 'package:get_storage/get_storage.dart';
+import 'src/app.dart';
 
-void main() {
-  runApp(const ProviderScope(child: MaterialApp(home: Main())));
+void main() async {
+  await GetStorage.init();
+  runApp(const App());
 }
