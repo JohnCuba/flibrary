@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flibrary/src/data/local/model/catalog_meta.data.dart';
 import 'package:flibrary/src/domain/model/catalog_meta.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:xml/xml.dart';
 
 class CatalogsMetaService {
   final _storageKey = 'catalogs';
@@ -27,10 +29,14 @@ class CatalogsMetaService {
     _storage.write(_storageKey, '[${value.join(',')}]');
   }
 
-  add({required String url, Map<String, String>? headers}) {
+  add({required String url, Map<String, String>? headers}) async {
     final list = all;
+    final dio = Dio(BaseOptions(baseUrl: url, headers: headers));
+    final document =
+        XmlDocument.parse(await dio.get('').then((value) => value.data));
     list.add(CatalogMeta(
         id: DateTime.now().toUtc().millisecondsSinceEpoch.toString(),
+        title: document.findAllElements('title').first.text,
         url: url,
         headers: headers));
 

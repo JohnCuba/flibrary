@@ -1,4 +1,6 @@
 import 'package:flibrary/src/domain/controllers/catalog.controller.dart';
+import 'package:flibrary/src/presentation/components/spinner.dart';
+import 'package:flibrary/src/presentation/components/catalog.dart';
 import 'package:flibrary/src/presentation/components/edit_library.dart';
 import 'package:flibrary/src/domain/controllers/catalogs_meta.controller.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +20,7 @@ class CatalogScreen extends StatelessWidget {
     if (id == null) {
       return const EditLibraryForm();
     }
-    return Row(children: [
-      Obx(() => (Text('library: ${catalogController.page?.title}'))),
-      TextButton(
-          onPressed: catalogsMetaController.remove, child: const Text('Remove'))
-    ]);
+    return Obx(
+        () => catalogController.page == null ? const Spinner() : Catalog());
   }
 }

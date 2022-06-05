@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flibrary/src/data/local/model/catalog_page.data.dart';
+import 'package:flibrary/src/data/opds/model/catalog_page.data.dart';
 import 'package:flibrary/src/domain/model/catalog_meta.dart';
 import 'package:flibrary/src/domain/model/catalog_page.dart';
 

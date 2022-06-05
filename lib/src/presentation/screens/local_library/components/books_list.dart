@@ -1,5 +1,5 @@
 import 'package:flibrary/src/domain/controllers/local_library.controller.dart';
-import 'package:flibrary/src/presentation/components/book.dart';
+import 'package:flibrary/src/presentation/components/catalog_entry.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +16,14 @@ class BooksList extends StatelessWidget {
         );
       }
       return ListView(
-        children: controller.books.map((book) => Book(data: book)).toList(),
+        children: controller.books
+            .map((book) => CatalogEntry(
+                  title: book.title,
+                  subtitle: book.author,
+                  icon: Icons.delete_outline_rounded,
+                  onClick: book.delete,
+                ))
+            .toList(),
       );
     });
   }

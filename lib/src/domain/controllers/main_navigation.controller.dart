@@ -2,7 +2,8 @@ import 'package:flibrary/src/data/local/service/catalogs_meta.service.dart';
 import 'package:flibrary/src/presentation/screens/catalog/screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flibrary/src/routing/main_routing.dart' as main_routing;
+import 'package:flibrary/src/presentation/routing/main_routing.dart'
+    as main_routing;
 
 class MainNavigationController extends GetxController {
   static MainNavigationController get to => Get.find();
